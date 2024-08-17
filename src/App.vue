@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
+import { initFlowbite } from 'flowbite'
 
 // Toggle button state
 const toggleButton = ref(false);
+
+const isDarkMode = ref(false);
 
 // Determine device type based on screen width
 const deviceType = ref<'mobile' | 'tablet' | 'desktop'>('desktop');
@@ -24,10 +27,31 @@ const toggleMobile = () => {
   console.log('nilai toggle', toggleButton.value);
 };
 
+const toggleDarkMode = () => {
+  if (isDarkMode.value) {
+    document.documentElement.classList.remove('dark');
+    localStorage.setItem('theme', 'light');
+    isDarkMode.value = false;
+  } else {
+    document.documentElement.classList.add('dark');
+    localStorage.setItem('theme', 'dark');
+    isDarkMode.value = true;
+  }
+};
+
 // Update deviceType on window resize
 onMounted(() => {
+  initFlowbite()
   updateDeviceType(); // Check device type on initial load
   window.addEventListener('resize', updateDeviceType);
+  const theme = localStorage.getItem('theme');
+  if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    document.documentElement.classList.add('dark');
+    isDarkMode.value = true;
+  } else {
+    document.documentElement.classList.remove('dark');
+    isDarkMode.value = false;
+  }
 });
 
 // Clean up event listener when component is unmounted
@@ -48,8 +72,6 @@ onUnmounted(() => {
 
         <button 
             @click="toggleMobile"
-            data-drawer-target="logo-sidebar"
-            data-drawer-toggle="logo-sidebar"
             aria-controls="logo-sidebar" 
             type="button"
             class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
@@ -66,7 +88,17 @@ onUnmounted(() => {
         </a>
       </div>
 
+      <div>
+      </div>
+      
       <div class="flex items-center">
+        <div class="flex items-center ms-3">
+          <button @click="toggleDarkMode">
+            <span v-if="isDarkMode" class="text-gray-900 dark:text-white">🌙</span>
+            <span v-else>☀️</span>
+          </button>
+        </div>
+
           <div class="flex items-center ms-3">
             <div>
               <button type="button" class="flex text-sm bg-gray-800 rounded-full focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" aria-expanded="false" data-dropdown-toggle="dropdown-user">
@@ -99,7 +131,8 @@ onUnmounted(() => {
               </ul>
             </div>
           </div>
-        </div>
+      </div>
+
     </div>
   </div>
 </nav>
@@ -162,8 +195,14 @@ onUnmounted(() => {
     'sm:ml-0': deviceType === 'mobile' && !toggleButton, 
     'ml-64': deviceType === 'desktop' && !toggleButton,
     'tablet-class': deviceType === 'tablet' && !toggleButton }" 
-    class="p-4">
-      <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-14">
+    class="p-4 dark:bg-gray-800 h-screen">
+      <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-white mt-14">
+        <div class="bg-white dark:bg-gray-800">
+          <h1 class="text-gray-900 dark:text-white">Dark mode</h1>
+          <p class="text-gray-600 dark:text-gray-300">
+            Lorem ipsum...
+          </p>
+        </div>
       </div>
    </div>
 

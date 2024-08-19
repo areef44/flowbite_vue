@@ -12,13 +12,10 @@ defineProps<{
     'sm:ml-0': deviceType === 'mobile' && !toggleButton, 
     'ml-64': deviceType === 'desktop' && !toggleButton,
     'tablet-class': deviceType === 'tablet' && !toggleButton }" 
-    class="p-4 dark:bg-gray-800 h-screen">
-      <div class="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-white mt-14">
+    class="p-4 bg-gray-100 dark:bg-gray-800 h-screen">
+      <div class="card rounded-md p-4 bg-white dark:border dark:border-white mt-14 dark:bg-gray-800">
         <div class="bg-white dark:bg-gray-800">
-          <h1 class="text-gray-900 dark:text-white">Dark mode</h1>
-          <p class="text-gray-600 dark:text-gray-300">
-            Lorem ipsum...
-          </p>
+          <router-view />
         </div>
       </div>
    </div>
